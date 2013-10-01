@@ -1,0 +1,7 @@
+HTTP/1.1 404 Not Found 
+
+User-Agent: fizway daemon
+Accept: */*
+Content-Type: text/xml; charset=utf-8
+Content-Lenght: 25
+<test>Hello world!</test>

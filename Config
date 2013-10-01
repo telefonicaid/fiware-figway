@@ -1,0 +1,18 @@
+# Set debug [0 = silent, 1 = platform answer is given, 2 = send/answer are shown, 3 = verbose, 4 = show all traces]
+DEBUG = 1
+
+# Name or address of the M2M platform server. IPv4 and IPv6 addresses are supported.
+PLATFORM_IP = 130.206.80.44
+
+# Port of the M2M platform server.
+PLATFORM_PORT = 8002
+#PLATFORM_PORT = 1026
+
+# Protocol used for the RaspberryPI <--> M2M Platform communication (SML/NGSI) 
+PLATFORM_PROTO = SML
+#PLATFORM_PROTO = NGSI
+
+# This security Key is necessary if the M2M SensorML platform is DCA-IDAS, otherwise it is ignored.
+APIKEY = 8k1jmnuniesq3rom3ludmq39l
+
+

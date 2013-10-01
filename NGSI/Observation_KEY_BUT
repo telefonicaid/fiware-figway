@@ -1,0 +1,22 @@
+<updateContextRequest>
+<contextElementList>
+  <contextElement>
+    <entityId type="Sensor" isPattern="">
+      <id>UKCAMPUSPARTY.DEVICE_TYPE:RPI_ID:DEVICE_ID</id>
+    </entityId>
+    <contextAttributeList>
+      <contextAttribute>
+        <name>TimeInstant</name>
+        <type>urn:x-ogc:def:trs:IDAS:1.0:ISO8601</type>
+        <contextValue>2012-11-25T11:09:02Z</contextValue>
+      </contextAttribute>
+      <contextAttribute>
+        <name>ButtonClick</name>
+        <type>urn:x-ogc:def:phenomenon:UKCAMPUSPARTY:1.0:ButtonClick</type>
+        <contextValue>BUT_VALUE</contextValue>
+      </contextAttribute>
+    </contextAttributeList>
+  </contextElement>
+</contextElementList>
+<updateAction>update</updateAction>
+</updateContextRequest>

@@ -1,0 +1,58 @@
+#!/bin/bash
+
+# Copyright 2013 Telefonica Investigación y Desarrollo, S.A.U
+# 
+# This file is part of FIGWAY software (a machine2machine gateway for the Raspberry PI).
+#
+# FIGWAY is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+# FIGWAY is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License for more details.
+#
+# You should have received a copy of the GNU Affero General Public License along with FIGWARE. If not, see http://www.gnu.org/licenses/.
+#
+# For those usages not covered by the GNU Affero General Public License please contact with: Carlos Ralli Ucendo [ralli@tid.es] 
+
+
+# Developed by Carlos Ralli Ucendo (@carlosralli), Aug 2013.
+#
+# This simple script sends commands to z-wave devices by using the z-way JSON API. 
+# In the future this tool should use "POST" method instead of "GET" as it might be deprecated by z-way.
+
+if [ $# != "3" ]; then
+ echo "Usage: $0 [DEVICE_NUMBER] [DEVICE_TYPE] [COMMAND_VALUE]"
+ exit
+fi
+
+DEVICE_NUMBER=$1
+DEVICE_TYPE=$2
+commandval=$3
+
+if [[ $DEVICE_TYPE == "SWITCH" ]]; then
+ commandurl="http://127.0.0.1:8083/ZWaveAPI/Run/devices[$DEVICE_NUMBER].instances[0].commandClasses[0x20].Set($commandval)"
+ echo "Executing command <$commandurl>." 
+ curl -g $commandurl
+ echo
+
+elif [[ $DEVICE_TYPE == "RGBS" ]]; then
+ commandval1=$( echo $commandval | cut -d '-' -f 1 )
+ commandval2=$( echo $commandval | cut -d '-' -f 2 )
+ commandval3=$( echo $commandval | cut -d '-' -f 3 )
+
+ echo
+ commandurl1="http://127.0.0.1:8083/ZWaveAPI/Run/devices[$DEVICE_NUMBER].instances[2].commandClasses[0x26].Set($commandval1)"
+ commandurl2="http://127.0.0.1:8083/ZWaveAPI/Run/devices[$DEVICE_NUMBER].instances[3].commandClasses[0x26].Set($commandval2)"
+ commandurl3="http://127.0.0.1:8083/ZWaveAPI/Run/devices[$DEVICE_NUMBER].instances[4].commandClasses[0x26].Set($commandval3)"
+
+ echo "Executing command <$commandurl1>."
+ curl -g $commandurl1
+ echo
+ echo "Executing command <$commandurl2>." 
+ curl -g $commandurl2
+ echo
+ echo "Executing command <$commandurl3>." 
+ curl -g $commandurl3
+ echo
+
+else
+ echo "No command executed"
+ echo
+fi
