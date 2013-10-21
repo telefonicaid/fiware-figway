@@ -24,11 +24,11 @@
 #### If more devices are added you may need to uncomment/add new sections below
 #########################################################################################
 
-DEV_4IN1=4 
-DEV_KEY=5
-DEV_SWITCH=6
+DEV_4IN1=2
+DEV_KEY=3
+DEV_SWITCH=4
+DEV_RGBS=5
 
-DEV_RGBS=255
 DEV_GARAGE=256 
 DEV_DOOR=257 
 DEV_SWITCH2=258
@@ -54,8 +54,8 @@ DEV_SWITCH2_ID=$(printf %04d $DEV_SWITCH2)
 ./registerDevice $DEV_4IN1_ID 4IN1
 ./registerDevice $DEV_KEY_ID KEY
 ./registerDevice $DEV_SWITCH_ID SWITCH 
+./registerDevice $DEV_RGBS_ID RGBS
 
-#./registerDevice $DEV_RGBS_ID RGBS
 #./registerDevice $DEV_GARAGE_ID GARAGE 
 #./registerDevice $DEV_DOOR_ID DOOR
 #./registerDevice $DEV_SWITCH2_ID SWITCH

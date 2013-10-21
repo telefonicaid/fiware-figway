@@ -39,8 +39,8 @@ elif [[ $DEVICE_TYPE == "RGBS" ]]; then
 
  echo
  commandurl1="http://127.0.0.1:8083/ZWaveAPI/Run/devices[$DEVICE_NUMBER].instances[2].commandClasses[0x26].Set($commandval1)"
- commandurl2="http://127.0.0.1:8083/ZWaveAPI/Run/devices[$DEVICE_NUMBER].instances[3].commandClasses[0x26].Set($commandval2)"
- commandurl3="http://127.0.0.1:8083/ZWaveAPI/Run/devices[$DEVICE_NUMBER].instances[4].commandClasses[0x26].Set($commandval3)"
+ commandurl2="http://127.0.0.1:8083/ZWaveAPI/Run/devices[$DEVICE_NUMBER].instances[4].commandClasses[0x26].Set($commandval2)"
+ commandurl3="http://127.0.0.1:8083/ZWaveAPI/Run/devices[$DEVICE_NUMBER].instances[3].commandClasses[0x26].Set($commandval3)"
 
  echo "Executing command <$commandurl1>."
  curl -g $commandurl1

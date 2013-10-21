@@ -25,13 +25,14 @@
 #### If more devices are added you may need to uncomment/add new sections below
 #########################################################################################
 
-DEV_4IN1=4 
-DEV_KEY=5 
-DEV_SWITCH=6 
+DEV_4IN1=2 
+DEV_KEY=3 
+DEV_SWITCH=4 
 DEV_SWITCH_DAEMON_PORT=7777
 
-DEV_RGBS=255
+DEV_RGBS=5
 DEV_RGBS_DAEMON_PORT=7778
+
 DEV_GARAGE=256  
 DEV_DOOR=257
 DEV_SWITCH2=258
@@ -70,8 +71,8 @@ echo
 #echo
 #echo "   - SWITCH2 ON-OFF Actuator is device number: <"$DEV_SWITCH2"> with DEV_ID: <"$DEV_SWITCH2_ID">."
 #echo
-#echo "   - RGBS Actuator is device number: <"$DEV_RGBS"> with DEV_ID: <"$DEV_RGBS_ID">."
-#echo
+echo "   - RGBS Actuator is device number: <"$DEV_RGBS"> with DEV_ID: <"$DEV_RGBS_ID">."
+echo
 #echo "   - GARAGE        Sensor is device number: <"$DEV_GARAGE"> with DEV_ID: <"$DEV_GARAGE_ID">."
 #echo
 
@@ -85,8 +86,8 @@ echo " - Launching SWITCH daemon"
 ./fizway_switchd $DEV_SWITCH SWITCH $DEV_SWITCH_DAEMON_PORT &
 # echo " - Launching SWITCH2 daemon"
 # ./fizway_switchd $DEV_SWITCH2 SWITCH $DEV_SWITCH2_DAEMON_PORT &
-# echo " - Launching RGBS daemon"
-# ./fizway_switchd $DEV_RGBS RGBS $DEV_RGBS_DAEMON_PORT &
+ echo " - Launching RGBS daemon"
+ ./fizway_switchd $DEV_RGBS RGBS $DEV_RGBS_DAEMON_PORT &
 
 echo "Listening to z-wave devices & to Actuator daemons..."
 echo

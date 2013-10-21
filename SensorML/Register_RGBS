@@ -10,7 +10,7 @@
 </sml:identifier> 
 <sml:identifier>
 <sml:Term definition="urn:x-ogc:def:identifier:IDAS:1.0:UniversalIdentifierOfLogicalHub">
-<sml:value>UKCAMPUSPARTY</sml:value>
+<sml:value>HACKSANTANDER</sml:value>
 </sml:Term>
 </sml:identifier>
 </sml:IdentifierList>
@@ -26,7 +26,7 @@
 </sml:classification> <sml:inputs>
 <sml:InputList>
 <sml:input name="Power" xlink:type="simple">
-<swe:ObservableProperty definition="urn:x-ogc:def:phenomenon:UKCAMPUSPARTY:1.0:Power" fixed="false"/>
+<swe:ObservableProperty definition="urn:x-ogc:def:phenomenon:HACKSANTANDER:1.0:Power" fixed="false"/>
 </sml:input>
 </sml:InputList>
 </sml:inputs>
@@ -44,7 +44,7 @@
 <sml:ParameterList>
 <sml:parameter name="Command URL" xlink:arcrole="urn:x-ogc:def:property:IDAS:1.0:read" xlink:href="urn:x-ogc:def:property:IDAS:1.0:commandURL" xlink:role="urn:x-ogc:def:property:IDAS:1.0:operationProperty">
 <swe:Text>
-<swe:value>http://1.0.0.1:9999</swe:value>
+<swe:value>http://194.73.233.51:7778</swe:value>
 </swe:Text>
 </sml:parameter>
 </sml:ParameterList>
