@@ -27,6 +27,7 @@
 #include <iostream>
 #include <fstream>
 #include <errno.h>
+#include <time.h>
 
 #define MAX_STR_COMP 80
 #define MAX_LINE 128 
@@ -105,6 +106,7 @@ int main(int argC, char* argV[]) {
     std::string      fileTemplate;
     std::string      fileOrig;
     std::string      fileRepl;
+    std::string      fileRepl2;
     std::string      fileFinal ;
 
     std::string      platformType;
@@ -114,6 +116,17 @@ int main(int argC, char* argV[]) {
     int ret;
     char buff[MAX_SML_BUFF];
     char addressBuff[MAX_FILE];
+
+    std::string obsTime;
+    char obsTime_str[30];
+    time_t now_t;
+    struct tm now;
+    time(&now_t);
+    now = *localtime(&now_t);
+    snprintf (obsTime_str, sizeof(obsTime_str), "%4d-%02d-%02dT%02d:%02d:%02dZ",now.tm_year+1900, now.tm_mon+1, now.tm_mday, now.tm_hour, now.tm_min, now.tm_sec);
+    obsTime = obsTime_str;
+
+//    fprintf(stdout, "Observation Timestamp <%s>.\n", obsTime.c_str());
 
     switch (argC) {
      case 5:
@@ -190,6 +203,7 @@ int main(int argC, char* argV[]) {
 	fileTemplate = smlPath + "Observation_" + deviceType + "_" + obsType;
         fileOrig  = smlPath + "Observation_" + deviceType + "_" + obsType + "_" + deviceID + fileSuffix;
         fileRepl  = smlPath + "Observation_" + deviceType + "_" + obsType + "_" + deviceID + fileSuffix + "_temp";
+        fileRepl2  = smlPath + "Observation_" + deviceType + "_" + obsType + "_" + deviceID + fileSuffix + "_temp2";
         fileFinal = smlPath + "Observation_" + deviceType + "_" + obsType + "_" + deviceID + fileSuffix;
 	str2find = obsType + "_VALUE";
         str2repl = obsValue;
@@ -203,8 +217,15 @@ int main(int argC, char* argV[]) {
         }
 
 	ret = FindReplaceFile(str2find, str2repl, fileOrig, fileRepl);
+
+        str2find = "TIME_ISO8601";
+        str2repl = obsTime;
+
+        ret = FindReplaceFile(str2find, str2repl, fileRepl, fileRepl2);
+
         ret = remove (fileFinal.c_str());
-        ret = rename (fileRepl.c_str(), fileFinal.c_str());
+        ret = remove (fileRepl.c_str());
+        ret = rename (fileRepl2.c_str(), fileFinal.c_str());
 	
-        if (debugSwitch >= 1) printf("-> Created file <%s> with observation type <%s> and value <%s>.\n", fileRepl.c_str(), obsType.c_str(), obsValue.c_str());
+        if (debugSwitch >= 1) printf("-> Created file <%s> with observation type <%s> and value <%s>. TimeStamp <%s>.\n", fileFinal.c_str(), obsType.c_str(), obsValue.c_str(),obsTime.c_str());
 }

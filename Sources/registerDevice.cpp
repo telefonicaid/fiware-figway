@@ -29,6 +29,7 @@
 #include <sys/ioctl.h> 
 #include <sys/socket.h>
 #include <net/if.h>
+#include <time.h>
 
 #include "clientSocketHttp6-test.h"
 #define MAX_STR_COMP 80
@@ -187,6 +188,17 @@ int main(int argC, char* argV[]) {
     int ret;
     char buff[MAX_SML_BUFF];
     char addressBuff[MAX_FILE];
+
+    std::string obsTime;
+    char obsTime_str[30];
+    time_t now_t;
+    struct tm now;
+   
+    time(&now_t);
+    now = *localtime(&now_t);
+    snprintf (obsTime_str, sizeof(obsTime_str), "%4d-%02d-%02dT%02d:%02d:%02dZ",now.tm_year+1900, now.tm_mon+1, now.tm_mday, now.tm_hour, now.tm_min, now.tm_sec); 
+    obsTime = obsTime_str;
+//    fprintf(stdout, "Registration Timestamp <%s>.\n", obsTime.c_str());
 
     switch (argC) {
      case 3:

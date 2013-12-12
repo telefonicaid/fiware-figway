@@ -10,7 +10,7 @@
 </sml:identifier> 
 <sml:identifier>
 <sml:Term definition="urn:x-ogc:def:identifier:IDAS:1.0:UniversalIdentifierOfLogicalHub">
-<sml:value>UKCAMPUSPARTY</sml:value>
+<sml:value>HACKSANTANDER</sml:value>
 </sml:Term>
 </sml:identifier>
 </sml:IdentifierList>
@@ -27,7 +27,7 @@
 <sml:inputs>
 <sml:InputList>
 <sml:input name="Move" xlink:type="simple">
-<swe:ObservableProperty definition="urn:x-ogc:def:phenomenon:UKCAMPUSPARTY:1.0:Move" fixed="false"/>
+<swe:ObservableProperty definition="urn:x-ogc:def:phenomenon:HACKSANTANDER:1.0:Move" fixed="false"/>
 </sml:input>
 <sml:input name="illuminance" xlink:type="simple">
 <swe:ObservableProperty definition="urn:x-ogc:def:phenomenon:IDAS:1.0:illuminance" fixed="false"/>

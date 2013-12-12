@@ -3,15 +3,15 @@
 <om:Observation >
 <om:samplingTime>
 <gml:TimeInstant>
-<gml:timePosition frame="urn:x-ogc:def:trs:IDAS:1.0:ISO8601" >2012-11-25T11:09:02Z</gml:timePosition>
+<gml:timePosition frame="urn:x-ogc:def:trs:IDAS:1.0:ISO8601" >TIME_ISO8601</gml:timePosition>
 </gml:TimeInstant>
 </om:samplingTime> 
 <om:procedure xlink:href="DEVICE_TYPE:RPI_ID:DEVICE_ID" /> 
-<om:observedProperty xlink:href="urn:x-ogc:def:phenomenon:UKCAMPUSPARTY:1.0:ButtonClick" /> 
+<om:observedProperty xlink:href="urn:x-ogc:def:phenomenon:HACKSANTANDER:1.0:ButtonClick" /> 
 <om:featureOfInterest />
 <om:parameter xlink:href="urn:x-ogc:def:identifier:IDAS:1.0:UniversalIdentifierOfLogicalHub" >
 <swe:Text>
-<swe:value>UKCAMPUSPARTY</swe:value>
+<swe:value>HACKSANTANDER</swe:value>
 </swe:Text>
 </om:parameter>
 <om:result>
