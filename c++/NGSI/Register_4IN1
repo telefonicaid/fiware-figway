@@ -1,0 +1,53 @@
+<registerContextRequest>
+<contextRegistrationList>
+  <contextRegistration>
+    <entityIdList>
+      <entityId type="Sensor" isPattern="">
+        <id>UKCAMPUSPARTY.DEVICE_TYPE:RPI_ID:DEVICE_ID</id>
+      </entityId>
+    </entityIdList>
+    <contextRegistrationAttributeList>
+      <contextRegistrationAttribute>
+        <name>TimeInstant</name>
+        <type>urn:x-ogc:def:trs:IDAS:1.0:ISO8601</type>
+        <isDomain>false</isDomain>
+      </contextRegistrationAttribute>
+      <contextRegistrationAttribute>
+        <name>Move</name>
+        <type>urn:x-ogc:def:phenomenon:UKCAMPUSPARTY:1.0:Move</type>
+        <isDomain>false</isDomain>
+      </contextRegistrationAttribute>
+      <contextRegistrationAttribute>
+        <name>illuminance</name>
+        <type>urn:x-ogc:def:phenomenon:IDAS:1.0:illuminance</type>
+        <isDomain>false</isDomain>
+      </contextRegistrationAttribute>
+      <contextRegistrationAttribute>
+        <name>temperature</name>
+        <type>urn:x-ogc:def:phenomenon:IDAS:1.0:temperature</type>
+        <isDomain>false</isDomain>
+      </contextRegistrationAttribute>
+      <contextRegistrationAttribute>
+        <name>relativeHumidity</name>
+        <type>urn:x-ogc:def:phenomenon:IDAS:1.0:relativeHumidity</type>
+        <isDomain>false</isDomain>
+      </contextRegistrationAttribute>
+    </contextRegistrationAttributeList>
+    <registrationMetadata>
+      <contextMetadata>
+      <name>Serial Number</name>
+      <type></type>
+      <value>DEVICE_TYPE:RPI_ID:DEVICE_ID</value>
+      </contextMetadata>
+      <contextMetadata>
+      <name>UniversalIdentifierOfLogicalHub</name>
+      <type></type>
+      <value>UKCAMPUSPARTY</value>
+      </contextMetadata>
+    </registrationMetadata>
+    <providingApplication>http://1.0.0.1:8888</providingApplication>
+  </contextRegistration>
+</contextRegistrationList>
+<duration>PT1M</duration>
+</registerContextRequest>
+

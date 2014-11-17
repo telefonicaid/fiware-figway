@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no" ?> <sos:RegisterSensor service="SOS" version="1.0.0" xsi:schemaLocation="http://www.opengis.net/sos/1.0 sosRegisterSensor.xsd" xmlns:swe="http://www.opengis.net/swe/1.0.1" xmlns:gml="http://www.opengis.net/gml" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:om="http://www.opengis.net/om/1.0" xmlns:sml="http://www.opengis.net/sensorML/1.0.1" xmlns:sos="http://www.opengis.net/sos/1.0" >
+<sos:SensorDescription>
+<sml:System>
+<sml:identification>
+<sml:IdentifierList>
+<sml:identifier>
+<sml:Term definition="urn:x-ogc:def:identifier:IDAS:1.0:serialNumber">
+<sml:value>DEVICE_TYPE:RPI_ID:DEVICE_ID</sml:value>
+</sml:Term>
+</sml:identifier> 
+<sml:identifier>
+<sml:Term definition="urn:x-ogc:def:identifier:IDAS:1.0:UniversalIdentifierOfLogicalHub">
+<sml:value>HACKSANTANDER</sml:value>
+</sml:Term>
+</sml:identifier>
+</sml:IdentifierList>
+</sml:identification> 
+<sml:classification>
+<sml:ClassifierList>
+<sml:classifier>
+<sml:Term definition="urn:x-ogc:def:classifier:IDAS:1.0:system">
+<sml:value>system00001</sml:value>
+</sml:Term>
+</sml:classifier>
+</sml:ClassifierList>
+</sml:classification> <sml:inputs>
+<sml:InputList>
+<sml:input name="Status" xlink:type="simple">
+<swe:ObservableProperty definition="urn:x-ogc:def:phenomenon:HACKSANTANDER:1.0:Status" fixed="false"/>
+</sml:input>
+</sml:InputList>
+</sml:inputs>
+<sml:outputs>
+<sml:OutputList>
+<sml:output name="Status" xlink:type="simple">
+<swe:Text fixed="false"/>
+</sml:output>
+</sml:OutputList>
+</sml:outputs> 
+<!--</sml:parameters>-->
+<!--<sml:components/>--> 
+</sml:System>
+</sos:SensorDescription> 
+<sos:ObservationTemplate>
+<om:Observation >
+<om:samplingTime> 
+</om:samplingTime> 
+<om:resultTime> 
+</om:resultTime> 
+<om:procedure /> 
+<om:observedProperty /> 
+<om:featureOfInterest /> 
+<om:result>
+</om:result>
+</om:Observation>
+</sos:ObservationTemplate>
+</sos:RegisterSensor>

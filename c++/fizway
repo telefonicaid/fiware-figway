@@ -1,0 +1,337 @@
+#!/bin/bash
+
+# Copyright 2013 Telefonica Investigación y Desarrollo, S.A.U
+# 
+# This file is part of FIGWAY software (a machine2machine gateway for the Raspberry PI).
+#
+# FIGWAY is free software: you can redistribute it and/or modify it under the terms of the GNU Affero General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+# FIGWAY is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Affero General Public License for more details.
+#
+# You should have received a copy of the GNU Affero General Public License along with FIGWARE. If not, see http://www.gnu.org/licenses/.
+#
+# For those usages not covered by the GNU Affero General Public License please contact with: Carlos Ralli Ucendo [ralli@tid.es] 
+
+
+# Developed by Carlos Ralli Ucendo (@carlosralli), Aug 2013.
+#
+# This simple script send z-wave devices notification to FI-WARE M2M Backend platform 
+# The M2M platform and related protocol are specified in the figway configuration file.
+# It does not use z-way JSON/C APIs but the z-way real-time logs stored at /var/log/z-way-server.log
+# In the future this tool should be re-coded to use the above mentioned z-way APIs.
+#
+
+#########################################################################################
+#### This is the place to configure the z-wave devices. 
+#### If more devices are added you may need to uncomment/add new sections below
+#########################################################################################
+
+DEV_4IN1=2 
+DEV_KEY=3 
+DEV_SWITCH=4 
+DEV_SWITCH_DAEMON_PORT=7777
+
+DEV_RGBS=5
+DEV_RGBS_DAEMON_PORT=7778
+
+DEV_GARAGE=256  
+DEV_DOOR=257
+DEV_SWITCH2=258
+DEV_SWITCH2_DAEMON_PORT=7779
+
+
+#########################################################################################
+#### This section calculates DEV_ID codes (left padding with Zero to get 4 char ID)
+#### If more devices are added in the previous section, be sure to calculate them         
+#########################################################################################
+
+DEV_4IN1_ID=$(printf %04d $DEV_4IN1)
+DEV_KEY_ID=$(printf %04d $DEV_KEY)
+DEV_SWITCH_ID=$(printf %04d $DEV_SWITCH)
+
+DEV_GARAGE_ID=$(printf %04d $DEV_GARAGE)
+DEV_DOOR_ID=$(printf %04d $DEV_DOOR)
+DEV_RGBS_ID=$(printf %04d $DEV_RGBS)
+DEV_SWITCH2_ID=$(printf %04d $DEV_SWITCH2)
+
+#########################################################################################
+#### Main Script below        
+#########################################################################################
+
+echo "This script monitors your Z-wave network of devices & executes scheduled actions."
+echo  
+echo "   - 4IN1    MultiSensor is device number: <"$DEV_4IN1"> with DEV_ID: <"$DEV_4IN1_ID">."
+echo
+echo "   - 4BUTTON KEY  Sensor is device number: <"$DEV_KEY"> with DEV_ID: <"$DEV_KEY_ID">."
+echo
+echo "   - SWITCH ONOFF Actuator is device number: <"$DEV_SWITCH"> with DEV_ID: <"$DEV_SWITCH_ID">."
+echo
+
+# Uncomment only if the following sensors are present
+#echo "   - Door/Window   Sensor is device number: <"$DEV_DOOR"> with DEV_ID: <"$DEV_DOOR_ID">." 
+#echo
+#echo "   - SWITCH2 ON-OFF Actuator is device number: <"$DEV_SWITCH2"> with DEV_ID: <"$DEV_SWITCH2_ID">."
+#echo
+echo "   - RGBS Actuator is device number: <"$DEV_RGBS"> with DEV_ID: <"$DEV_RGBS_ID">."
+echo
+#echo "   - GARAGE        Sensor is device number: <"$DEV_GARAGE"> with DEV_ID: <"$DEV_GARAGE_ID">."
+#echo
+
+echo "Killing previous Actuator daemons (if any)..."
+echo
+killall -9 ./fizway_switchd
+
+echo "Launching Actuator daemons..."
+echo 
+echo " - Launching SWITCH daemon"
+./fizway_switchd $DEV_SWITCH SWITCH $DEV_SWITCH_DAEMON_PORT &
+# echo " - Launching SWITCH2 daemon"
+# ./fizway_switchd $DEV_SWITCH2 SWITCH $DEV_SWITCH2_DAEMON_PORT &
+ echo " - Launching RGBS daemon"
+ ./fizway_switchd $DEV_RGBS RGBS $DEV_RGBS_DAEMON_PORT &
+
+echo "Listening to z-wave devices & to Actuator daemons..."
+echo
+
+tail -Fn0 /var/log/z-way-server.log  | 
+while read line 
+ do
+
+#########################################################################################
+##### Repeat the following section for each EverSpring Door/Window sensor
+#########################################################################################
+
+        if [[ "$line" =~ "SETDATA devices.$DEV_DOOR.instances.0.commandClasses.48.data.level" ]]; then
+               echo "---> Processing Action of Door/Window sensor DEV_ID=$DEV_DOOR_ID"
+               echo $line
+               if [[ "$line" =~ "False" ]]; then
+                echo "Sensor CLOSED."
+                echo
+               ./addObservation $DEV_DOOR_ID DOOR STAT ClOSE
+               ./sendObservations $DEV_DOOR_ID  DOOR STAT &
+                fi
+               if [[ "$line" =~ "True" ]]; then
+                echo "Sensor OPENED."
+                echo
+                ./addObservation $DEV_DOOR_ID DOOR STAT OPEN
+                ./sendObservations $DEV_DOOR_ID DOOR STAT &               
+               fi
+        fi
+
+        if [[ "$line" =~ "SETDATA devices.$DEV_DOOR.instances.0.commandClasses.128.data.last" ]]; then
+               echo "---> Processing Action of Door/Window sensor DEV_ID=$DEV_DOOR_ID (Battery)"
+               echo $line
+        fi
+
+
+#########################################################################################
+#####         Repeat the following section for each 4BUTTON KEY FOB Remote/Sensor
+#########################################################################################
+
+        if [[ "$line" =~ "SETDATA devices.1.instances.1.commandClasses.32.data.level =" ]]; then
+               echo "---> Processing Action of 4BUTTON KEY Sensor DEV_ID=$DEV_KEY_ID"
+               echo $line
+               if [[ "$line" =~ "32.data.level = 255" ]]; then
+                echo "Sensor 4BUTTON KEY: Pressed button 1."
+                echo
+               ./addObservation $DEV_KEY_ID KEY BUT 1 
+               ./sendObservations $DEV_KEY_ID KEY BUT & 
+               fi
+               if [[ "$line" =~ "32.data.level = 0" ]]; then
+                echo "Sensor 4BUTTON KEY: Pressed button 1 (TWICE)."                
+                echo
+               ./addObservation $DEV_KEY_ID KEY BUT 5 
+               ./sendObservations $DEV_KEY_ID KEY BUT &  
+               fi
+        fi
+
+        if [[ "$line" =~ "SETDATA devices.1.instances.3.commandClasses.32.data.level =" ]]; then 
+               echo "---> Processing Action of 4BUTTON KEY Sensor DEV_ID=$DEV_KEY_ID"
+               echo $line
+               if [[ "$line" =~ "32.data.level = 255" ]]; then
+                echo "Sensor 4BUTTON KEY: Pressed button 2."
+                echo
+               ./addObservation $DEV_KEY_ID KEY BUT 2
+               ./sendObservations $DEV_KEY_ID KEY BUT & 
+               fi
+               if [[ "$line" =~ "32.data.level = 0" ]]; then
+                echo "Sensor 4BUTTON KEY: Pressed button 2 (TWICE)."                
+                echo
+               ./addObservation $DEV_KEY_ID KEY BUT 6
+               ./sendObservations $DEV_KEY_ID KEY BUT & 
+               fi
+        fi
+
+        if [[ "$line" =~ "SETDATA devices.1.instances.2.commandClasses.32.data.level =" ]]; then
+               echo "---> Processing Action of 4BUTTON KEY Sensor DEV_ID=$DEV_KEY_ID"
+               echo $line
+               if [[ "$line" =~ "32.data.level = 255" ]]; then
+                echo "Sensor 4BUTTON KEY: Pressed button 3."
+                echo
+               ./addObservation $DEV_KEY_ID KEY BUT 3
+               ./sendObservations $DEV_KEY_ID KEY BUT & 
+               fi
+               if [[ "$line" =~ "32.data.level = 0" ]]; then
+                echo "Sensor 4BUTTON KEY: Pressed button 3 (TWICE)."                
+                echo
+               ./addObservation $DEV_KEY_ID KEY BUT 7
+               ./sendObservations $DEV_KEY_ID KEY BUT & 
+               fi
+        fi
+
+        if [[ "$line" =~ "SETDATA devices.1.instances.4.commandClasses.32.data.level =" ]]; then
+               echo "---> Processing Action of 4BUTTON Actuator DEV_ID=$DEV_KEY_ID"
+               echo $line
+               if [[ "$line" =~ "32.data.level = 255" ]]; then
+                echo "Sensor 4BUTTON KEY: Pressed button 4."
+                echo
+               ./addObservation $DEV_KEY_ID KEY BUT 4
+               ./sendObservations $DEV_KEY_ID KEY BUT & 
+               fi
+               if [[ "$line" =~ "32.data.level = 0" ]]; then
+                echo "Sensor 4BUTTON KEY: Pressed button 4 (TWICE)."                
+                echo
+               ./addObservation $DEV_KEY_ID KEY BUT 8
+               ./sendObservations $DEV_KEY_ID KEY BUT & 
+               fi
+        fi
+
+
+        if [[ "$line" =~ "SETDATA devices.$DEV_KEY.instances.0.commandClasses.128.data.last" ]]; then
+               echo "---> Processing Action of 4BUTTON KEY Sensor DEV_ID=$DEV_4BUTTON_ID (Battery)"
+               echo $line
+        fi
+
+
+#########################################################################################
+#####         Repeat the following section for each Garage sensor
+#########################################################################################
+
+        if [[ "$line" =~ "SETDATA devices.$DEV_GARAGE.instances.0.commandClasses.48.data.level" ]]; then
+               echo "---> Processing Action of GARAGE sensor DEV_ID=$DEV_GARAGE_ID"
+               echo $line
+               if [[ "$line" =~ "False" ]]; then
+                echo "Sensor False (Horizontal)."
+                echo
+                ./addObservation $DEV_GARAGE_ID GARAGE STAT HORIZONTAL
+                ./sendObservations $DEV_GARAGE_ID GARAGE STAT &   
+               fi
+               if [[ "$line" =~ "True" ]]; then
+                echo "Sensor OPENED (Vertical)."
+                echo
+                ./addObservation $DEV_GARAGE_ID GARAGE STAT VERTICAL
+                ./sendObservations $DEV_GARAGE_ID GARAGE STAT & 
+               fi
+        fi
+
+        if [[ "$line" =~ "SETDATA devices.$DEV_GARAGE.instances.0.commandClasses.128.data.last" ]]; then
+               echo "---> Processing Action of GARAGE sensor DEV_ID=$DEV_GARAGE_ID (Battery)"
+               echo $line
+        fi
+
+#########################################################################################
+
+
+
+#########################################################################################
+#### Repeat the following section for each Everspring SWITCH Actuator (ONOFF or DIMMER) --> SWITCH
+#########################################################################################
+
+
+      if [[ "$line" =~ "SETDATA devices.$DEV_SWITCH.instances.0.commandClasses.37.data.level" ]]; then
+       echo "---> Processing Action of ONOFF SWITCH Actuator DEV-ID=$DEV_SWITCH_ID"
+       echo $line
+        if [[ "$line" =~ ".37.data.level = 255" ]]; then
+         echo "Actuator ON-OFF SWITCH to ON."
+         echo
+         ./addObservation $DEV_SWITCH_ID SWITCH STAT ON 
+         ./sendObservations $DEV_SWITCH_ID SWITCH STAT &
+        fi        
+        if [[ "$line" =~ ".37.data.level = 0" ]]; then
+         echo "Actuator ON-OFF SWITCH to OFF."
+         echo
+         ./addObservation $DEV_SWITCH_ID SWITCH STAT OFF 
+         ./sendObservations $DEV_SWITCH_ID SWITCH STAT &
+        fi
+      fi
+
+
+#########################################################################################
+#### Repeat the following section for each Everspring SWITCH Actuator (ONOFF or DIMMER) --> SWITCH2
+#########################################################################################
+
+      if [[ "$line" =~ "SETDATA devices.$DEV_SWITCH2.instances.0.commandClasses.37.data.level" ]]; then
+       echo "---> Processing Action of ONOFF2 SWITCH Actuator DEV-ID=$DEV_SWITCH2_ID"
+       echo $line
+        if [[ "$line" =~ ".37.data.level = 255" ]]; then
+         echo "Actuator ON-OFF2 to ON."
+         echo
+         ./addObservation $DEV_SWITCH2_ID SWITCH STAT ON
+         ./sendObservations $DEV_SWITCH2_ID SWITCH STAT & 
+        fi        
+        if [[ "$line" =~ ".37.data.level = 0" ]]; then
+         echo "Actuator ON-OFF2 to OFF."
+         echo
+         ./addObservation $DEV_SWITCH2_ID SWITCH STAT OFF
+         ./sendObservations $DEV_SWITCH2_ID SWITCH STAT & 
+        fi
+      fi
+
+
+#########################################################################################
+#####         Repeat the following section for each AEON 4in1 Multisensor    
+#########################################################################################
+
+        if [[ "$line" =~ "SETDATA devices.$DEV_4IN1.instances.0.commandClasses.48.data.level" ]]; then
+               echo $line
+               echo "---> Processing Action of 4in1 sensor DEV_ID=$DEV_4IN1_ID (Presence)"
+               if [[ "$line" =~ "False" ]]; then
+                echo "Sensor QUIET."
+                echo
+                ./addObservation $DEV_4IN1_ID 4IN1 MOV QUIET 
+                ./sendObservations $DEV_4IN1_ID 4IN1 MOV &
+               fi
+               if [[ "$line" =~ "True" ]]; then
+                echo "Sensor MOVE."
+                echo
+                ./addObservation $DEV_4IN1_ID 4IN1 MOV MOVE 
+                ./sendObservations $DEV_4IN1_ID 4IN1 MOV &
+               fi
+        fi
+
+        if [[ "$line" =~ "SETDATA devices.$DEV_4IN1.instances.0.commandClasses.49.data.3.val =" ]]; then
+               echo $line
+               echo "---> Processing Lecture Type of 4in1 sensor DEV_ID=$DEV_4IN1_ID  (Luminiscence)"
+               Lum=$( echo $line | cut -d '=' -f 2 )             
+               echo "Lum = $Lum"  
+               ./addObservation $DEV_4IN1_ID 4IN1 LUM $Lum  
+               ./sendObservations $DEV_4IN1_ID 4IN1 LUM &
+        fi
+
+        if [[ "$line" =~ "SETDATA devices.$DEV_4IN1.instances.0.commandClasses.49.data.5.val =" ]]; then
+               echo $line
+               echo "---> Processing Lecture Type of 4in1 sensor DEV_ID=$DEV_4IN1_ID  (Humidity)"
+               Hum=$( echo $line | cut -d '=' -f 2 )
+               echo "Hum = $Hum"
+               ./addObservation $DEV_4IN1_ID 4IN1 HUM $Hum 
+               ./sendObservations $DEV_4IN1_ID 4IN1 HUM &
+        fi
+
+
+        if [[ "$line" =~ "SETDATA devices.$DEV_4IN1.instances.0.commandClasses.49.data.1.val =" ]]; then
+               echo $line
+               echo "---> Processing Lecture Type of 4in1 sensor DEV_ID=$DEV_4IN1_ID  (Temperature)"
+               Tem=$( echo $line | cut -d '=' -f 2 )
+               echo "Tem = $Tem"
+               ./addObservation $DEV_4IN1_ID 4IN1 TEM $Tem 
+               ./sendObservations $DEV_4IN1_ID 4IN1 TEM &
+        fi
+
+
+        if [[ "$line" =~ "SETDATA devices.$DEV_4IN1.instances.0.commandClasses.128.data.last" ]]; then
+               echo $line
+               echo "---> Processing Action of 4in1 sensor DEV_ID=$DEV_4IN1_ID  (Battery)"
+               echo "DATA: $line" 
+        fi
+
+done
+

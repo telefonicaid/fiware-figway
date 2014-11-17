@@ -1,0 +1,15 @@
+HTTP/1.1 200 OK 
+
+User-Agent: fizway daemon
+Accept: */*
+Content-Type: text/xml; charset=utf-8
+Content-Lenght: 454
+
+<?xml version="1.0" encoding="UTF-8"?>
+<paid:commandResponse xsi:schemaLocation="urn:ogc:def:dictionary:PAID:1.0:paid PaidCommand.xsd" xmlns:swe="http://www.opengis.net/swe/1.0.1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:paid="urn:ogc:def:dictionary:PAID:1.0:paid" id="IDAS_CALL_ID">
+ <paid:cmdParam name="FreeText">
+ <swe:Text>
+      <swe:value>Response OK from RPI</swe:value>
+ </swe:Text> 
+</paid:cmdParam> 
+</paid:commandResponse>
