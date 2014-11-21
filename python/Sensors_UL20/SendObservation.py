@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-# Copyright 2014 Telefonica Investigación y Desarrollo, S.A.U
+# Copyright 2014 Telefonica Investigacion y Desarrollo, S.A.U
 # 
 # This file is part of FIGWAY software (a set of tools for FIWARE Orion ContextBroker and IDAS2.6).
 #
