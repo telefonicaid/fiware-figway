@@ -43,10 +43,25 @@ IDAS_UL20_PORT=config.get('idas', 'ul20port')
 IDAS_SERVICE=config.get('idas', 'service')
 APIKEY=config.get('idas', 'apikey')
 HOST_ID=config.get('local', 'host_id')
+IDAS_AAA=config.get('idas', 'OAuth')
+if IDAS_AAA == "yes":
+   TOKEN=config.get('user', 'token')
+   TOKEN_SHOW=TOKEN[1:5]+"**********************************************************************"+TOKEN[-5:]
+else:
+   TOKEN="NULL"
+   TOKEN_SHOW="NULL"
+
 f.close()
+
+
+HEADERS = {'content-type': 'application/json', 'X-Auth-Token' : TOKEN}
+HEADERS_SHOW = {'content-type': 'application/json', 'X-Auth-Token' : TOKEN_SHOW}
 
 IDAS_URL = 'http://'+IDAS_HOST+':'+IDAS_ADMIN_PORT
 URL = IDAS_URL + '/m2m/v2/services/'+IDAS_SERVICE+'/assets/asset-'+SENSOR_ID
+PAYLOAD = {'some' : 'data'}
 
-r = requests.get(URL)
+#r = requests.get(URL)
+r = requests.get(URL, data=json.dumps(PAYLOAD), headers=HEADERS)
+
 print json.dumps(r.json(), indent=4)

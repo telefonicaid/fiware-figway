@@ -42,11 +42,14 @@ CB_PORT=config.get('contextbroker', 'port')
 CB_AAA=config.get('contextbroker', 'OAuth')
 if CB_AAA == "yes":
    TOKEN=config.get('user', 'token')
+   TOKEN_SHOW=TOKEN[1:5]+"**********************************************************************"+TOKEN[-5:]
 else:
    TOKEN="NULL"
+   TOKEN_SHOW="NULL"
 
 CB_URL = "http://"+CB_HOST+":"+CB_PORT
 HEADERS = {'content-type': 'application/json' , 'accept': 'application/json', 'X-Auth-Token' : TOKEN}
+HEADERS_SHOW = {'content-type': 'application/json', 'accept': 'application/json' , 'X-Auth-Token' : TOKEN_SHOW}
 PAYLOAD = '{                \
     "entities": [           \
     {                        \
@@ -61,7 +64,7 @@ PAYLOAD = '{                \
 URL = CB_URL + '/ngsi10/queryContext'
 
 print "* Asking to "+URL
-print "* Headers: "+str(HEADERS)
+print "* Headers: "+str(HEADERS_SHOW)
 print "* Sending PAYLOAD: "
 print json.dumps(json.loads(PAYLOAD), indent=4)
 print

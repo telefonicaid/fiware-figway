@@ -49,16 +49,26 @@ IDAS_UL20_PORT=config.get('idas', 'ul20port')
 APIKEY=config.get('idas', 'apikey')
 
 HOST_ID=config.get('local', 'host_id')
+
+IDAS_AAA=config.get('idas', 'OAuth')
+if IDAS_AAA == "yes":
+   TOKEN=config.get('user', 'token')
+   TOKEN_SHOW=TOKEN[1:5]+"**********************************************************************"+TOKEN[-5:]
+else:
+   TOKEN="NULL"
+   TOKEN_SHOW="NULL"
+
+
 f.close()
 
 URL = "http://"+IDAS_HOST+":"+IDAS_UL20_PORT+'/d?k='+APIKEY+'&i='+SENSOR_ID
 PAYLOAD = MEASUREMENTS
-#PAYLOAD = 'h|99'
 
-HEADERS = {'content-type': 'application/text'}
+HEADERS = {'content-type': 'application/text', 'X-Auth-Token' : TOKEN}
+HEADERS_SHOW = {'content-type': 'application/text', 'X-Auth-Token' : TOKEN_SHOW}
 
 print "* Asking to "+URL
-print "* Headers: "+str(HEADERS)
+print "* Headers: "+str(HEADERS_SHOW)
 print "* Sending PAYLOAD: "
 print PAYLOAD
 print

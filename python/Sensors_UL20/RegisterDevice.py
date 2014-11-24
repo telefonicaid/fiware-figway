@@ -49,8 +49,10 @@ IDAS_UL20_PORT=config.get('idas', 'ul20port')
 IDAS_AAA=config.get('idas', 'OAuth')
 if IDAS_AAA == "yes":
    TOKEN=config.get('user', 'token')
+   TOKEN_SHOW=TOKEN[1:5]+"**********************************************************************"+TOKEN[-5:]
 else:
    TOKEN="NULL"
+   TOKEN_SHOW="NULL"
 
 HOST_ID=config.get('local', 'host_id')
 f.close()
@@ -66,9 +68,10 @@ PAYLOAD = '{   \
 }'
 
 HEADERS = {'content-type': 'application/json' , 'X-Auth-Token' : TOKEN}
+HEADERS_SHOW = {'content-type': 'application/json' , 'X-Auth-Token' : TOKEN_SHOW}
 
 print "* Asking to "+URL
-print "* Headers: "+str(HEADERS)
+print "* Headers: "+str(HEADERS_SHOW)
 print "* Sending PAYLOAD: "
 print json.dumps(json.loads(PAYLOAD), indent=4)
 print
