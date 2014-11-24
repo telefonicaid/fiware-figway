@@ -23,14 +23,12 @@ print "Now you will be prompted for your user/password within FIWARE Lab Oauth2.
 print "If you didn't go and register first at http://cloud.fiware.org"
 print
 USER = raw_input("FIWARE Lab Username: ")
-#PASSWORD = raw_input("FIWARE Lab Password: ")
 PASSWORD = getpass.getpass("FIWARE Lab Password: ") 
 PAYLOAD = "{\"auth\": {\"passwordCredentials\": {\"username\":\""+USER+"\", \"password\":\""+PASSWORD+"\"}}}"
 HEADERS =  {'content-type': 'application/json'} 
 URL = TOKENS_URL
 
 RESP = requests.post(URL, data=PAYLOAD, headers=HEADERS)
-# print RESP.text
 print
 print "FIWARE Oauth2.0 Token: "+RESP.json()["access"]["token"]["id"]
 print

@@ -24,7 +24,6 @@ python/SensorsUL20/    -> Specific tools to talk to IDAS2.6 and simulate virtual
                            There is an specific README.md file in this directory.
 
 
-
 Credits
 ------------
 - Developed by Carlos Ralli Ucendo (@carlosralli). Nov 2014.

@@ -45,7 +45,7 @@ config.readfp(io.BytesIO(sample_config))
 IDAS_HOST=config.get('idas', 'host')
 IDAS_ADMIN_PORT=config.get('idas', 'adminport')
 IDAS_UL20_PORT=config.get('idas', 'ul20port')
-
+IDAS_SERVICE=config.get('idas', 'service')
 APIKEY=config.get('idas', 'apikey')
 
 HOST_ID=config.get('local', 'host_id')

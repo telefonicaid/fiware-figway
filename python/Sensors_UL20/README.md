@@ -12,12 +12,17 @@ The command above will list all available Device Models.
 2) You can use then GetModel.py to explore a specific Model. For instance, the "SENSOR_TEMP" model.
 > python GetModel.py SENSOR_TEMP
 
+2.1) If you need to create a new model then use CreateModel.py and check out the model examples at python/SensorUL20/models folder.
+
 3) Then register (in the FIWARE IoT Cloud) your own Devices:
-> RegisterDevice [DEV_TYPE] [DEV_NAME]
+> RegisterDevice [DEV_TYPE] [DEV_NAME] [ASSET_NAME]
 
 Where DEV_TYPE has to be one of the available Models discovered in (1) and [DEV_NAME] is the name we wish to give to the device itself.
 The script will return the [DEV_ID], which is the actual Device identifier in the FIWARE Cloud.
 DEV_ID is calculated as follows: [DEV_ID] = [host_id]:[DEV_NAME], being [host_id] the one specified in the ../config.ini file.
+ASSET_ID is calculated as follows: [DEV_ID] = [host_id]:[DEV_NAME], being [host_id] the one specified in the ../config.ini file.
+
+In the ContextBroker your device will appear with Entity ID = [DEV_TYPE].[ASSET_ID] and Entity Type = "Device".
 
 Examples:
 > python RegisterDevice ZWAVE_4IN1 4in1-1

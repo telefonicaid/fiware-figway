@@ -26,14 +26,16 @@ CONFIG_FILE = "../config.ini"
 NUM_ARG=len(sys.argv)
 COMMAND=sys.argv[0] 
 
-if NUM_ARG==3:
+if NUM_ARG==4:
    SENSOR_TYPE=sys.argv[1]
    SENSOR_NAME=sys.argv[2]
+   ASSET_NAME=sys.argv[3]
 else:
-   print 'Usage: '+COMMAND+' [DEV_TYPE] [DEV_NAME]'
+   print 'Usage: '+COMMAND+' [DEV_TYPE] [DEV_NAME] [ASSET_NAME]'
    print '  Where DEV_TYPE = Any of the available Device Models shown with DiscoverModels.py'
-   print '        DEV_NAME is any short name  to identify this particular device. Examples: Temp-kitchen, 4in-1EricRoom, etc.'
-   print '        However, in the FIWARE Cloud your device will be identified with host_id:DEV_NAME (host_id of the config.ini file).'
+   print '        DEV_NAME = The name of the physical device. Normally it holds information such us vendor,model,etc. Examples: ZWAVE-4IN1-1, ZWAVE-4IN1-2... ' 
+   print '        ASSET_NAME is any short name  to identify this particular device. Examples: Temp-kitchen, 4IN1-EricRoom, etc.'
+   print '        However, in the FIWARE Cloud your device/asset will be identified with host_id:DEV_NAME and host_id:ASSET_NAME (host_id of the config.ini file).'
    sys.exit(2)
 
 # Load the configuration file
@@ -45,6 +47,8 @@ config.readfp(io.BytesIO(sample_config))
 IDAS_HOST=config.get('idas', 'host')
 IDAS_ADMIN_PORT=config.get('idas', 'adminport')
 IDAS_UL20_PORT=config.get('idas', 'ul20port')
+
+IDAS_SERVICE=config.get('idas', 'service')
 
 IDAS_AAA=config.get('idas', 'OAuth')
 if IDAS_AAA == "yes":
@@ -62,7 +66,7 @@ PAYLOAD = '{   \
   "name": "'+HOST_ID+':'+SENSOR_NAME+'", \
   "model": "'+SENSOR_TYPE+'", \
   "asset": {  \
-     "name": "asset-'+HOST_ID+':'+SENSOR_NAME+'", \
+     "name": "'+HOST_ID+':'+ASSET_NAME+'", \
      "description": "asset model protocol" \
    } \
 }'
@@ -70,6 +74,16 @@ PAYLOAD = '{   \
 HEADERS = {'content-type': 'application/json' , 'X-Auth-Token' : TOKEN}
 HEADERS_SHOW = {'content-type': 'application/json' , 'X-Auth-Token' : TOKEN_SHOW}
 
+print "* YOUR DEVICE details:"
+print "*** DEVICE ID = "+ HOST_ID + ':'+ SENSOR_NAME
+print "*** ASSET ID = "+ HOST_ID + ':'+ ASSET_NAME
+print 
+print "* This device will be sent to the ContextBroker with the following configuration"
+print "*** Entity ID = "+SENSOR_TYPE+'.'+HOST_ID + ':'+ ASSET_NAME
+print "*** Entity Type = Device"
+print "*** FIWARE_SERVICE = "+ IDAS_SERVICE
+print
+print
 print "* Asking to "+URL
 print "* Headers: "+str(HEADERS_SHOW)
 print "* Sending PAYLOAD: "

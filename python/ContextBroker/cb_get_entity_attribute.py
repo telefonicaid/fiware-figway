@@ -40,6 +40,7 @@ config.readfp(io.BytesIO(sample_config))
 
 CB_HOST=config.get('contextbroker', 'host')
 CB_PORT=config.get('contextbroker', 'port')
+CB_FIWARE_SERVICE=config.get('contextbroker', 'fiware_service')
 CB_AAA=config.get('contextbroker', 'OAuth')
 if CB_AAA == "yes":
    TOKEN=config.get('user', 'token')
@@ -49,8 +50,8 @@ else:
    TOKEN_SHOW="NULL"
 
 CB_URL = "http://"+CB_HOST+":"+CB_PORT
-HEADERS = {'content-type': 'application/json','accept': 'application/json','X-Auth-Token' : TOKEN}
-HEADERS_SHOW = {'content-type': 'application/json', 'accept': 'application/json' , 'X-Auth-Token' : TOKEN_SHOW}
+HEADERS = {'content-type': 'application/json','accept': 'application/json', 'Fiware-Service': CB_FIWARE_SERVICE ,'X-Auth-Token' : TOKEN}
+HEADERS_SHOW = {'content-type': 'application/json', 'accept': 'application/json' , 'Fiware-Service': CB_FIWARE_SERVICE , 'X-Auth-Token' : TOKEN_SHOW}
 
 PAYLOAD = '{                \
     "entities": [           \

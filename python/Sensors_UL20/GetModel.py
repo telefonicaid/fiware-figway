@@ -41,6 +41,7 @@ config.readfp(io.BytesIO(sample_config))
 IDAS_HOST=config.get('idas', 'host')
 IDAS_ADMIN_PORT=config.get('idas', 'adminport')
 IDAS_UL20_PORT=config.get('idas', 'ul20port')
+IDAS_SERVICE=config.get('idas', 'service')
 IDAS_AAA=config.get('idas', 'OAuth')
 if IDAS_AAA == "yes":
    TOKEN=config.get('user', 'token')
@@ -55,7 +56,7 @@ IDAS_URL = "http://"+IDAS_HOST+":"+IDAS_ADMIN_PORT
 HEADERS = {'content-type': 'application/json' , 'X-Auth-Token' : TOKEN}
 HEADERS_SHOW = {'content-type': 'application/json' , 'X-Auth-Token' : TOKEN_SHOW}
 
-URL = IDAS_URL + '/m2m/v2/services/OpenIoT/models/'+MODEL
+URL = IDAS_URL + '/m2m/v2/services/'+IDAS_SERVICE+'/models/'+MODEL
 
 print "* Asking to "+URL
 print "* Headers: "+str(HEADERS_SHOW)
