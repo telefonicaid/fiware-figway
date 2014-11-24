@@ -1,0 +1,17 @@
+{   
+ "name": "SENSOR_TEMP", 
+ "capabilities" : [  
+  { 
+   "name" : "Temperature", 
+   "property" : "temperature", 
+   "format" : { 
+          "name" : "Temperature", 
+          "alias" : "t" , 
+          "phenomenon": "urn:x-ogc:def:phenomenon:IDAS:1.0:temperature", 
+          "type" : "Quantity", 
+          "uom": "celsius" 
+          } 
+  } 
+  ], 
+  "protocol": "ul-2_0" 
+}

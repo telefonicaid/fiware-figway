@@ -1,0 +1,17 @@
+{   
+ "name": "SENSOR_HUM", 
+ "capabilities" : [  
+  { 
+   "name" : "Humidity", 
+   "property" : "humidity", 
+   "format" : { 
+          "name" : "Humidity", 
+          "alias" : "h" , 
+          "phenomenon": "urn:x-ogc:def:phenomenon:IDAS:1.0:relativeHumidity", 
+          "type" : "Quantity", 
+          "uom": "percent" 
+          } 
+  } 
+  ], 
+  "protocol": "ul-2_0" 
+}

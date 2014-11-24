@@ -1,0 +1,17 @@
+{   
+ "name": "SENSOR_MOV", 
+ "capabilities" : [  
+  { 
+   "name" : "Movement", 
+   "property" : "Movement", 
+   "format" : { 
+          "name" : "Movement", 
+          "alias" : "m" , 
+          "phenomenon": "urn:x-ogc:def:phenomenon:IDAS:1.0:unknown", 
+          "type" : "Text", 
+          "uom": "Unknown" 
+          } 
+  } 
+  ], 
+  "protocol": "ul-2_0" 
+}

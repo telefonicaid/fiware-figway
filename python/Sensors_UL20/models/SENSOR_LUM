@@ -1,0 +1,17 @@
+{   
+ "name": "SENSOR_LUM", 
+ "capabilities" : [  
+  { 
+   "name" : "Illuminance", 
+   "property" : "illuminance", 
+   "format" : { 
+          "name" : "Illuminance", 
+          "alias" : "l" , 
+          "phenomenon": "urn:x-ogc:def:phenomenon:IDAS:1.0:illuminance", 
+          "type" : "Quantity", 
+          "uom": "lx" 
+          } 
+  } 
+  ], 
+  "protocol": "ul-2_0" 
+}

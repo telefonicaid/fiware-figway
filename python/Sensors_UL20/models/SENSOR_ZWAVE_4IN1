@@ -1,0 +1,50 @@
+{   
+ "name": "SENSOR_ZWAVE_4IN1", 
+ "capabilities" : [  
+  { 
+   "name" : "Temperature", 
+   "property" : "temperature", 
+   "format" : { 
+          "name" : "Temperatura", 
+          "alias" : "t" , 
+          "phenomenon": "urn:x-ogc:def:phenomenon:IDAS:1.0:temperature", 
+          "type" : "Quantity", 
+          "uom": "celsius" 
+          } 
+  }, 
+  { 
+   "name" : "Humidity", 
+   "property" : "humidity", 
+   "format" : { 
+          "name" : "Humidity", 
+          "alias" : "h" , 
+          "phenomenon": "urn:x-ogc:def:phenomenon:IDAS:1.0:relativeHumidity", 
+          "type" : "Quantity", 
+          "uom": "percent" 
+          } 
+  }, 
+  { 
+   "name" : "Illuminance", 
+   "property" : "illuminance", 
+   "format" : { 
+          "name" : "Illuminance", 
+          "alias" : "l" , 
+          "phenomenon": "urn:x-ogc:def:phenomenon:IDAS:1.0:illuminance", 
+          "type" : "Quantity", 
+          "uom": "lx" 
+          } 
+  }, 
+  { 
+   "name" : "Movement", 
+   "property" : "Movement", 
+   "format" : { 
+          "name" : "Movement", 
+          "alias" : "m" , 
+          "phenomenon": "urn:x-ogc:def:phenomenon:IDAS:1.0:unknown", 
+          "type" : "Text", 
+          "uom": "Unknown" 
+          } 
+  } 
+  ], 
+  "protocol": "ul-2_0" 
+}
