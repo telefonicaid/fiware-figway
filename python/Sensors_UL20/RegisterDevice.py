@@ -61,7 +61,7 @@ else:
 HOST_ID=config.get('local', 'host_id')
 f.close()
 
-URL = "http://"+IDAS_HOST+":"+IDAS_ADMIN_PORT+'/m2m/v2/services/OpenIoT/assets'
+URL = "http://"+IDAS_HOST+":"+IDAS_ADMIN_PORT+'/m2m/v2/services/'+IDAS_SERVICE+'/assets'
 PAYLOAD = '{   \
   "name": "'+HOST_ID+':'+SENSOR_NAME+'", \
   "model": "'+SENSOR_TYPE+'", \

@@ -1,0 +1,29 @@
+{   
+ "name": "SWITCH", 
+ "commands" : [
+   {
+    "name" : "RawCommand",
+
+    "parameters" : [{
+        "name" : "Command", 
+        "type" : "Text", 
+        "phenomenon" : "urn:x-ogc:def:phenomenon:IDAS:1.0:unknown"
+        }]
+   }
+   ],
+   
+ "capabilities": [  
+  { 
+   "name" : "Status", 
+   "property" : "Status",
+   "format" : { 
+          "name" : "Status", 
+          "alias" : "s" , 
+          "phenomenon": "urn:x-ogc:def:phenomenon:IDAS:1.0:unknown", 
+          "type" : "Text", 
+          "uom": "Unknown" 
+          } 
+  }
+  ], 
+  "protocol": "ul-2_0" 
+}

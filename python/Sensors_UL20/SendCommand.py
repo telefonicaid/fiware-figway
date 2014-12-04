@@ -1,3 +1,5 @@
+#!/usr/bin/env python
+
 # Copyright 2014 Telefonica Investigacion y Desarrollo, S.A.U
 # 
 # This file is part of FIGWAY software (a set of tools for FIWARE Orion ContextBroker and IDAS2.6).
@@ -13,7 +15,7 @@
 # For those usages not covered by the GNU Affero General Public License please contact with: Carlos Ralli Ucendo [ralli@tid.es] 
 # Developed by Carlos Ralli Ucendo (@carlosralli), Nov 2014.
 
-import requests, json
+
 import requests, json
 import ConfigParser
 import io
@@ -24,12 +26,18 @@ CONFIG_FILE = "../config.ini"
 NUM_ARG=len(sys.argv)
 COMMAND=sys.argv[0] 
 
-if NUM_ARG==2:
-   SENSOR_ID=sys.argv[1]
+if NUM_ARG==5:
+   ASSET_NAME=sys.argv[1]
+   COMMAND_NAME=sys.argv[2]
+   PARAM_NAME=sys.argv[3]
+   PARAMS=sys.argv[4]
 else:
-   print 'Usage: '+COMMAND+' [ASSET_ID]'
-   print '  Where DEV_ID = Any Device as listed with LisDevices.py. Remember: DEV_ID=host_id:DEV_NAME.'
-   print 
+   print 'Usage: '+COMMAND+' [ASSET_NAME] [COMMAND] [PARAM_NAME] [PARAM_VALUE]'
+   print '  Where ASSET_NAME = The ASSET ID to send the command to.'
+   print '        COMMAND = Command name. For generic commands (typical case) please use "RawCommand" ' 
+   print '        PARAM_NAME = For generic commands please use "Command"'
+   print '        PARAM_VALUE = For generic commands place here the comand itself with single quotes. E.g \'MyCommand 10-20-15\''
+   print
    sys.exit(2)
 
 # Load the configuration file
@@ -37,12 +45,13 @@ with open(CONFIG_FILE,'r+') as f:
     sample_config = f.read()
 config = ConfigParser.RawConfigParser(allow_no_value=True)
 config.readfp(io.BytesIO(sample_config))
+
 IDAS_HOST=config.get('idas', 'host')
 IDAS_ADMIN_PORT=config.get('idas', 'adminport')
 IDAS_UL20_PORT=config.get('idas', 'ul20port')
+
 IDAS_SERVICE=config.get('idas', 'service')
-APIKEY=config.get('idas', 'apikey')
-HOST_ID=config.get('local', 'host_id')
+
 IDAS_AAA=config.get('idas', 'OAuth')
 if IDAS_AAA == "yes":
    TOKEN=config.get('user', 'token')
@@ -51,17 +60,30 @@ else:
    TOKEN="NULL"
    TOKEN_SHOW="NULL"
 
+HOST_ID=config.get('local', 'host_id')
 f.close()
 
+URL = "http://"+IDAS_HOST+":"+IDAS_ADMIN_PORT+'/m2m/v2/services/'+IDAS_SERVICE+'/assets/'+ASSET_NAME+'/command'
 
-HEADERS = {'content-type': 'application/json', 'X-Auth-Token' : TOKEN}
-HEADERS_SHOW = {'content-type': 'application/json', 'X-Auth-Token' : TOKEN_SHOW}
 
-IDAS_URL = 'http://'+IDAS_HOST+':'+IDAS_ADMIN_PORT
-URL = IDAS_URL + '/m2m/v2/services/'+IDAS_SERVICE+'/assets/'+SENSOR_ID
-PAYLOAD = {'some' : 'data'}
+PAYLOAD ='{"name": "'+COMMAND_NAME+'", "params": [ \
+     { "name":"'+PARAM_NAME+'", "value": "'+PARAMS+'" } ] }'
 
-#r = requests.get(URL)
-r = requests.get(URL, data=json.dumps(PAYLOAD), headers=HEADERS)
 
-print json.dumps(r.json(), indent=4)
+HEADERS = {'content-type': 'application/json' , 'X-Auth-Token' : TOKEN}
+HEADERS_SHOW = {'content-type': 'application/json' , 'X-Auth-Token' : TOKEN_SHOW}
+
+
+print "* Asking to "+URL
+print "* Headers: "+str(HEADERS_SHOW)
+print "* Sending PAYLOAD: "
+print PAYLOAD
+print json.dumps(json.loads(PAYLOAD), indent=4)
+print
+print "..."
+r = requests.post(URL, data=PAYLOAD, headers=HEADERS)
+print
+print "* Status Code: "+str(r.status_code)
+print "* Response: "
+print r.text
+print
