@@ -1,0 +1,21 @@
+{
+ "devices": [
+    { "device_id": "DEV_ID",
+      "entity_name": "ENTITY_ID",
+      "entity_type": "thing",
+      "timezone": "Europe/Madrid",
+"attributes": [
+        { "object_id": "t",
+          "name": "temperature",
+          "type": "int"
+        } ],
+ "static_attributes": [
+        { "name": "att_name",
+          "type": "string",
+          "value": "value"
+        }
+       ]
+      }
+     ]
+    } 
+

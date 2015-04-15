@@ -1,0 +1,27 @@
+{
+ "devices": [
+    { "device_id": "DEV_ID",
+      "entity_name": "ENTITY_ID",
+      "entity_type": "thing",
+      "timezone": "Europe/Madrid",
+      "commands": [
+        { "name": "RawCommand",
+          "type": "command",
+          "value": "[Dev_ID]@RawCommand|%s"
+        } ],
+
+"attributes": [
+        { "object_id": "s",
+          "name": "status",
+          "type": "string"
+        } ],
+ "static_attributes": [
+        { "name": "att_name",
+          "type": "string",
+          "value": "value"
+        }
+       ]
+      }
+     ]
+    } 
+
