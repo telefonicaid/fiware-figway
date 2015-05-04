@@ -25,13 +25,24 @@ CONFIG_FILE = "../config.ini"
 
 NUM_ARG=len(sys.argv)
 COMMAND=sys.argv[0] 
+CB_IP='0.0.0.0'
+CB_PORT='1026'
 
-if NUM_ARG==3:
+if NUM_ARG>=3:
    FIWARE_SERVICE=sys.argv[1]
    API_KEY=sys.argv[2]
 else:
-   print 'Usage: '+COMMAND+' [FIWARE_SERVICE] [API_KEY]'
+   print 'Usage: '+COMMAND+' [FIWARE_SERVICE] [API_KEY] [ContextBroker_IP] [ContextBroker_PORT]'
+   print ' If you are using our ContextBroker IP = 0.0.0.0 and PORT = 1026, otherwise put your ContextBroker instance there'
+   print
    sys.exit(2)
+
+if NUM_ARG>=4:
+   CB_IP=sys.argv[3]
+
+if NUM_ARG>=5:
+   CB_PORT=sys.argv[4]
+
 
 # Load the configuration file
 with open(CONFIG_FILE,'r+') as f:
@@ -62,7 +73,7 @@ PAYLOAD = '{   \
     {   \
       "apikey": "'+API_KEY+'", \
       "token": "token2", \
-      "cbroker": "http://0.0.0.0:1026", \
+      "cbroker": "http://'+CB_IP+':'+CB_PORT+'", \
        "entity_type": "thing", \
       "resource": "/iot/d" \
     } \
