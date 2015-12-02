@@ -12,6 +12,7 @@
 #
 # For those usages not covered by the GNU Affero General Public License please contact with: Carlos Ralli Ucendo [ralli@tid.es] 
 # Developed by Carlos Ralli Ucendo (@carlosralli), Nov 2014.
+# New Features added/developped by Easy Global Market, Nov 2015 abbas.ahmad@eglobalmark.com 
 
 import requests, json, re 
 from collections import Counter
@@ -25,14 +26,14 @@ NUM_ARG=len(sys.argv)
 COMMAND=sys.argv[0] 
 
 if NUM_ARG==2:
-   ENTITY_TYPE=sys.argv[1]
+    ENTITY_TYPE=sys.argv[1]
 else:
-   print 'Usage: '+COMMAND+' [ENTITY_TYPE] '
-   print '  You may use ENTITY_TYPE: ALL to list all Entities belonging to all Entity types.'
-   sys.exit(2)
+    print 'Usage: '+COMMAND+' [ENTITY_TYPE] '
+    print '  You may use ENTITY_TYPE: ALL to list all Entities belonging to all Entity types.'
+    sys.exit(2)
 
 if ENTITY_TYPE == "ALL":
-   ENTITY_TYPE = ""
+    ENTITY_TYPE = ""
 
 # Load the configuration file
 with open(CONFIG_FILE,'r+') as f:
@@ -43,13 +44,14 @@ config.readfp(io.BytesIO(sample_config))
 CB_HOST=config.get('contextbroker', 'host')
 CB_PORT=config.get('contextbroker', 'port')
 CB_FIWARE_SERVICE=config.get('contextbroker', 'fiware_service')
+CB_FIWARE_SERVICEPATH=config.get('contextbroker', 'fiware-service-path')
 CB_AAA=config.get('contextbroker', 'OAuth')
 if CB_AAA == "yes":
-   TOKEN=config.get('user', 'token')
-   TOKEN_SHOW=TOKEN[1:5]+"**********************************************************************"+TOKEN[-5:]
+    TOKEN=config.get('user', 'token')
+    TOKEN_SHOW=TOKEN[1:5]+"**********************************************************************"+TOKEN[-5:]
 else:
-   TOKEN="NULL"
-   TOKEN_SHOW="NULL"
+    TOKEN="NULL"
+    TOKEN_SHOW="NULL"
 
 NODE_ID=config.get('local', 'host_id')
 f.close()
@@ -66,10 +68,9 @@ PAYLOAD = '{                \
     "attributes" : [ ] \
 }'
 
+HEADERS = {'content-type': 'application/json','accept': 'application/xml', 'Fiware-Service': CB_FIWARE_SERVICE ,'Fiware-ServicePath': CB_FIWARE_SERVICEPATH,'X-Auth-Token' : TOKEN}
+HEADERS_SHOW = {'content-type': 'application/json', 'accept': 'application/xml' , 'Fiware-Service': CB_FIWARE_SERVICE ,'Fiware-ServicePath': CB_FIWARE_SERVICEPATH , 'X-Auth-Token' : TOKEN_SHOW}
 
-#HEADERS = {'content-type': 'application/json', 'accept': 'application/json' , 'X-Auth-Token' : TOKEN}
-HEADERS = {'content-type': 'application/json', 'Fiware-Service': CB_FIWARE_SERVICE ,'X-Auth-Token' : TOKEN}
-HEADERS_SHOW = {'content-type': 'application/json', 'accept': 'application/json' , 'Fiware-Service': CB_FIWARE_SERVICE , 'X-Auth-Token' : TOKEN_SHOW}
 URL = CB_URL + '/ngsi10/queryContext'
 
 print "* Asking to "+URL
@@ -104,6 +105,6 @@ print
 
 ASK = str(raw_input("Do you want me to print all Entities? (yes/no)"))
 if ASK == "yes":
-  print r.text
+    print r.text
 
 print

@@ -12,11 +12,22 @@
 #
 # For those usages not covered by the GNU Affero General Public License please contact with: Carlos Ralli Ucendo [ralli@tid.es] 
 # Developed by Carlos Ralli Ucendo (@carlosralli), Nov 2014.
-# New Features added/developped by Easy Global Market, Nov 2015 abbas.ahmad@eglobalmark.com 
 
-import requests
+import requests, json
 import ConfigParser
 import io
+import sys
+
+NUM_ARG=len(sys.argv)
+COMMAND=sys.argv[0] 
+
+if NUM_ARG==2:
+    ENTITY_ID=sys.argv[1]
+else:
+    print 'Usage: '+COMMAND+' [ENTITY_ID] '
+    print '  Example of ENTITY ID: Sevilla:82243213'
+    sys.exit(2)
+
 
 CONFIG_FILE = "../config.ini"
 
@@ -28,31 +39,41 @@ config.readfp(io.BytesIO(sample_config))
 
 CB_HOST=config.get('contextbroker', 'host')
 CB_PORT=config.get('contextbroker', 'port')
+CB_FIWARE_SERVICE=config.get('contextbroker', 'fiware_service')
 CB_AAA=config.get('contextbroker', 'OAuth')
-
 if CB_AAA == "yes":
     TOKEN=config.get('user', 'token')
     TOKEN_SHOW=TOKEN[1:5]+"**********************************************************************"+TOKEN[-5:]
 else:
     TOKEN="NULL"
-    TOKEN_SHOW="NULL"    
-
-NODE_ID=config.get('local', 'host_id')
-f.close()
+    TOKEN_SHOW="NULL"
 
 CB_URL = "http://"+CB_HOST+":"+CB_PORT
-PAYLOAD = {'some' : 'data'}
-HEADERS = {'Content-Type': 'application/json' ,'accept': 'application/json','X-Auth-Token' : TOKEN}
-HEADERS_SHOW = {'Content-Type': 'application/json' ,'accept': 'application/json' , 'X-Auth-Token' : TOKEN_SHOW}
+HEADERS = {'content-type': 'application/json' , 'accept': 'application/json', 'Fiware-Service': CB_FIWARE_SERVICE, 'X-Auth-Token' : TOKEN}
+HEADERS_SHOW = {'content-type': 'application/json', 'accept': 'application/json' , 'Fiware-Service': CB_FIWARE_SERVICE, 'X-Auth-Token' : TOKEN_SHOW}
+PAYLOAD = '{                \
+    "entities": [           \
+    {                        \
+        "type": "",   \
+        "isPattern": "false", \
+        "id": "'+ENTITY_ID+'"  \
+    }  \
+    ],  \
+    "attributes" : [ ] \
+}'
 
-URL = CB_URL + '/version'
+URL = CB_URL + '/ngsi10/queryContext'
 
 print "* Asking to "+URL
 print "* Headers: "+str(HEADERS_SHOW)
+print "* Sending PAYLOAD: "
+print json.dumps(json.loads(PAYLOAD), indent=4)
+print
 print "..."
-r = requests.get(URL, headers=HEADERS)
+r = requests.post(URL, data=PAYLOAD, headers=HEADERS)
 print
 print "* Status Code: "+str(r.status_code)
 print "* Response: "
 print r.text
 print
+

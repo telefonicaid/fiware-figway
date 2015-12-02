@@ -14,6 +14,7 @@
 #
 # For those usages not covered by the GNU Affero General Public License please contact with: Carlos Ralli Ucendo [ralli@tid.es] 
 # Developed by Carlos Ralli Ucendo (@carlosralli), Nov 2014
+# New Features added/developped by Easy Global Market, Nov 2015 abbas.ahmad@eglobalmark.com 
 
 import SocketServer, json, sys, os, time
 
@@ -22,14 +23,14 @@ NUM_ARG=len(sys.argv)
 COMMAND=sys.argv[0] 
 
 if NUM_ARG==3:
-   SERVER_PORT=eval(sys.argv[1])
-   HANDLING_SCRIPT=sys.argv[2]
+    SERVER_PORT=eval(sys.argv[1])
+    HANDLING_SCRIPT=sys.argv[2]
 else:
-   print 'Usage: '+COMMAND+' [PORT] [HANDLING_FILE_SCRIPT]'
-   print '  Where PORT = The TCP port the server will be listening at.'
-   print '        HANDLING_FILE_SCRIPT = The script that will be called once the server receives something. Use your own or SubscriptionHandler.py'
-   print
-   sys.exit(2)
+    print 'Usage: '+COMMAND+' [PORT] [HANDLING_FILE_SCRIPT]'
+    print '  Where PORT = The TCP port the server will be listening at.'
+    print '        HANDLING_FILE_SCRIPT = The script that will be called once the server receives something. Use your own or SubscriptionHandler.py'
+    print
+    sys.exit(2)
 
 SERVER_OK_RESPONSE = {'return':'ok'}
 

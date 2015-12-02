@@ -12,9 +12,9 @@
 #
 # For those usages not covered by the GNU Affero General Public License please contact with: Carlos Ralli Ucendo [ralli@tid.es] 
 # Developed by Carlos Ralli Ucendo (@carlosralli), Nov 2014.
+# New Features added/developped by Easy Global Market, Nov 2015 abbas.ahmad@eglobalmark.com 
 
-import requests, json, re 
-from collections import Counter
+import requests, json
 import ConfigParser
 import io
 import sys
@@ -25,17 +25,17 @@ NUM_ARG=len(sys.argv)
 COMMAND=sys.argv[0] 
 
 if NUM_ARG==4:
-   ENTITY_ID=sys.argv[1]
-   ENTITY_ATTR=sys.argv[2]
-   SERVER_URL=sys.argv[3]
+    ENTITY_ID=sys.argv[1]
+    ENTITY_ATTR=sys.argv[2]
+    SERVER_URL=sys.argv[3]
 else:
-   print 'Usage: '+COMMAND+' [ENTITY ID] [ATTRIBUTE] [SERVER URL]'
-   print '  ENTITY ID = Entity you want to watch for changes/updates.'
-   print '  ATTRIBUTE = Attribute whose change will trigger notifications. In this example script only this attribute will be notified.'
-   print '  SERVER URL = (Local) Server listening for notifications.Example: http://myserver.domain.com:10000' 
-   print '    It has to be a reachable address:port for the ContextBroker. If you are behind a NAT/Firewall contact your network admin.'
-   print
-   sys.exit(2)
+    print 'Usage: '+COMMAND+' [ENTITY ID] [ATTRIBUTE] [SERVER URL]'
+    print '  ENTITY ID = Entity you want to watch for changes/updates.'
+    print '  ATTRIBUTE = Attribute whose change will trigger notifications. In this example script only this attribute will be notified.'
+    print '  SERVER URL = (Local) Server listening for notifications.Example: http://myserver.domain.com:10000' 
+    print '    It has to be a reachable address:port for the ContextBroker. If you are behind a NAT/Firewall contact your network admin.'
+    print
+    sys.exit(2)
 
 
 # Load the configuration file
@@ -47,13 +47,15 @@ config.readfp(io.BytesIO(sample_config))
 CB_HOST=config.get('contextbroker', 'host')
 CB_PORT=config.get('contextbroker', 'port')
 CB_FIWARE_SERVICE=config.get('contextbroker', 'fiware_service')
+CB_FIWARE_SERVICEPATH=config.get('contextbroker', 'fiware-service-path')
+
 CB_AAA=config.get('contextbroker', 'OAuth')
 if CB_AAA == "yes":
-   TOKEN=config.get('user', 'token')
-   TOKEN_SHOW=TOKEN[1:5]+"**********************************************************************"+TOKEN[-5:]
+    TOKEN=config.get('user', 'token')
+    TOKEN_SHOW=TOKEN[1:5]+"**********************************************************************"+TOKEN[-5:]
 else:
-   TOKEN="NULL"
-   TOKEN_SHOW="NULL"
+    TOKEN="NULL"
+    TOKEN_SHOW="NULL"
 
 NODE_ID=config.get('local', 'host_id')
 f.close()
@@ -90,9 +92,9 @@ PAYLOAD = '{ \
     "throttling": "'+MIN_INTERVAL+'" \
 }' 
 
-HEADERS = {'content-type': 'application/json', 'accept': 'application/json' , 'Fiware-Service': CB_FIWARE_SERVICE ,'X-Auth-Token' : TOKEN}
-#HEADERS = {'content-type': 'application/json', 'Fiware-Service': CB_FIWARE_SERVICE ,'X-Auth-Token' : TOKEN}
-HEADERS_SHOW = {'content-type': 'application/json', 'accept': 'application/json' , 'Fiware-Service': CB_FIWARE_SERVICE , 'X-Auth-Token' : TOKEN_SHOW}
+HEADERS = {'content-type': 'application/json','accept': 'application/json', 'Fiware-Service': CB_FIWARE_SERVICE ,'Fiware-ServicePath': CB_FIWARE_SERVICEPATH,'X-Auth-Token' : TOKEN}
+HEADERS_SHOW = {'content-type': 'application/json', 'accept': 'application/json' , 'Fiware-Service': CB_FIWARE_SERVICE ,'Fiware-ServicePath': CB_FIWARE_SERVICEPATH , 'X-Auth-Token' : TOKEN_SHOW}
+
 URL = CB_URL + '/v1/subscribeContext'
 
 print "* Asking to "+URL
