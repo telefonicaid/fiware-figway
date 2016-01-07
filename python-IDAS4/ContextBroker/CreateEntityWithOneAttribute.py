@@ -12,26 +12,29 @@
 #
 # For those usages not covered by the GNU Affero General Public License please contact with: Carlos Ralli Ucendo [ralli@tid.es] 
 # Developed by Carlos Ralli Ucendo (@carlosralli), Nov 2014.
+# New Features added/developped by Easy Global Market, Nov 2015 abbas.ahmad@eglobalmark.com 
 
-import requests, json, re 
-from collections import Counter
+import requests, json
 import ConfigParser
 import io
 import sys
 
-CONFIG_FILE = "../config.ini"
-
 NUM_ARG=len(sys.argv)
 COMMAND=sys.argv[0] 
 
-if NUM_ARG==2:
-   SUBSCRIPTION_ID=sys.argv[1]
-else:
-   print 'Usage: '+COMMAND+' [SUBSCRIPTION ID]'
-   print '  SUBSCRIPTION ID = Subscription you want to be cancelled.'
-   print
-   sys.exit(2)
+if NUM_ARG==6:
+    ENTITY_ID=sys.argv[1]
+    ENTITY_TYPE=sys.argv[2]
+    ENTITY_ATTR=sys.argv[3]
+    ENTITY_ATTR_TYPE=sys.argv[4]
+    ENTITY_ATTR_VALUE=sys.argv[5]
 
+else:
+    print 'Usage: '+COMMAND+' [ENTITY ID] [ENTITY TYPE] [ATTRIBUTE NAME] [ATTRIBUTE TYPE] [ATTRIBUTE VALUE]'
+    print
+    sys.exit(2)
+
+CONFIG_FILE = "../config.ini"
 
 # Load the configuration file
 with open(CONFIG_FILE,'r+') as f:
@@ -42,26 +45,38 @@ config.readfp(io.BytesIO(sample_config))
 CB_HOST=config.get('contextbroker', 'host')
 CB_PORT=config.get('contextbroker', 'port')
 CB_FIWARE_SERVICE=config.get('contextbroker', 'fiware_service')
+CB_FIWARE_SERVICEPATH=config.get('contextbroker', 'fiware-service-path')
 CB_AAA=config.get('contextbroker', 'OAuth')
 if CB_AAA == "yes":
-   TOKEN=config.get('user', 'token')
-   TOKEN_SHOW=TOKEN[1:5]+"**********************************************************************"+TOKEN[-5:]
+    TOKEN=config.get('user', 'token')
+    TOKEN_SHOW=TOKEN[1:5]+"**********************************************************************"+TOKEN[-5:]
 else:
-   TOKEN="NULL"
-   TOKEN_SHOW="NULL"
-
-NODE_ID=config.get('local', 'host_id')
-f.close()
+    TOKEN="NULL"
+    TOKEN_SHOW="NULL"
 
 CB_URL = "http://"+CB_HOST+":"+CB_PORT
+HEADERS = {'content-type': 'application/json','accept': 'application/json', 'Fiware-Service': CB_FIWARE_SERVICE ,'Fiware-ServicePath': CB_FIWARE_SERVICEPATH,'X-Auth-Token' : TOKEN}
+HEADERS_SHOW = {'content-type': 'application/json', 'accept': 'application/json' , 'Fiware-Service': CB_FIWARE_SERVICE ,'Fiware-ServicePath': CB_FIWARE_SERVICEPATH , 'X-Auth-Token' : TOKEN_SHOW}
 
 PAYLOAD = '{ \
-  "subscriptionId": "'+SUBSCRIPTION_ID+'" \
+    "contextElements": [ \
+        { \
+            "type": "'+ENTITY_TYPE+'", \
+            "isPattern": "false",  \
+            "id": "'+ENTITY_ID+'", \
+            "attributes": [ \
+            { \
+                "name": "'+ENTITY_ATTR+'",  \
+                "type": "'+ENTITY_ATTR_TYPE+'", \
+                "value": "'+ENTITY_ATTR_VALUE+'" \
+            } \
+            ] \
+        } \
+    ], \
+    "updateAction": "APPEND" \
 }'
 
-HEADERS = {'content-type': 'application/json', 'accept': 'application/json' , 'Fiware-Service': CB_FIWARE_SERVICE ,'X-Auth-Token' : TOKEN}
-HEADERS_SHOW = {'content-type': 'application/json', 'accept': 'application/json' , 'Fiware-Service': CB_FIWARE_SERVICE , 'X-Auth-Token' : TOKEN_SHOW}
-URL = CB_URL + '/v1/unsubscribeContext'
+URL = CB_URL + '/v1/updateContext'
 
 print "* Asking to "+URL
 print "* Headers: "+str(HEADERS_SHOW)
@@ -72,6 +87,7 @@ print "..."
 r = requests.post(URL, data=PAYLOAD, headers=HEADERS)
 print
 print "* Status Code: "+str(r.status_code)
-print
+print "* Response: "
 print r.text
 print
+

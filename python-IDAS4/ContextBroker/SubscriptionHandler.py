@@ -12,8 +12,9 @@
 #
 # For those usages not covered by the GNU Affero General Public License please contact with: Carlos Ralli Ucendo [ralli@tid.es] 
 # Developed by Carlos Ralli Ucendo (@carlosralli), Nov 2014
+# New Features added/developped by Easy Global Market, Nov 2015 abbas.ahmad@eglobalmark.com 
 
-import sys, time
+import sys
 
 # In this variable you will get the JSON/XML/TEXT received by the server
 CONTENT=sys.argv[1]

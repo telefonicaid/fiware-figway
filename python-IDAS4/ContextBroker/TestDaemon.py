@@ -12,6 +12,7 @@
 #
 # For those usages not covered by the GNU Affero General Public License please contact with: Carlos Ralli Ucendo [ralli@tid.es] 
 # Developed by Carlos Ralli Ucendo (@carlosralli), Nov 2014
+# New Features added/developped by Easy Global Market, Nov 2015 abbas.ahmad@eglobalmark.com 
 
 import socket
 import json
@@ -21,12 +22,12 @@ NUM_ARG=len(sys.argv)
 COMMAND=sys.argv[0] 
 
 if NUM_ARG==2:
-   SERVER_PORT=eval(sys.argv[1])
+    SERVER_PORT=eval(sys.argv[1])
 else:
-   print 'Usage: '+COMMAND+' [PORT]'
-   print '  Where PORT = The TCP port the server is listening at.'
-   print
-   sys.exit(2)
+    print 'Usage: '+COMMAND+' [PORT]'
+    print '  Where PORT = The TCP port the server is listening at.'
+    print
+    sys.exit(2)
 
 data = {'message':'hello world!', 'test':123.4}
 
